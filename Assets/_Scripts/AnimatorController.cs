@@ -6,8 +6,7 @@ using UnityEngine.InputSystem;
 
 public class AnimatorController : NetworkBehaviour
 {
-    [SerializeField]
-    private Animator _animator = null;
+    [SerializeField] private Animator _animator = null;
 
     private Vector2 _moveValue;
 
@@ -29,7 +28,7 @@ public class AnimatorController : NetworkBehaviour
     }
 
     [ClientCallback]
-    private void OnEnable() 
+    private void OnEnable()
     {
         Controls.Enable();
         Controls.Player.Move.performed += ctx => ReadMoveValue(ctx);
@@ -49,30 +48,32 @@ public class AnimatorController : NetworkBehaviour
 
     [ClientCallback]
     private void Update() => Animations();
- 
-
-    [Client]
-   private void Animations()
-    {
-        if (_moveValue.x > 0 || _moveValue.y > 0 || _moveValue.x < 0 || _moveValue.y < 0)
-        {
-            _animator.SetBool("Walk", true);
-        }
-        else if(_moveValue.x == 0 || _moveValue.y == 0)
-        {
-            _animator.SetBool("Walk", false);
-        }
-    }
-
-    
-    private void ReadMoveValue(InputAction.CallbackContext ctx)
-    {
-        _moveValue = ctx.ReadValue<Vector2>();
-    }
 
     [ClientCallback]
     private void JumpAnimation()
     {
         _animator.SetTrigger("Jump");
     }
+
+
+    [Client]
+    private void Animations()
+    {
+        if (_moveValue.x > 0 || _moveValue.y > 0 || _moveValue.x < 0 || _moveValue.y < 0)
+        {
+            _animator.SetBool("Walk", true);
+        }
+        else if (_moveValue.x == 0 || _moveValue.y == 0)
+        {
+            _animator.SetBool("Walk", false);
+        }
+    }
+
+
+    private void ReadMoveValue(InputAction.CallbackContext ctx)
+    {
+        _moveValue = ctx.ReadValue<Vector2>();
+    }
+
+
 }

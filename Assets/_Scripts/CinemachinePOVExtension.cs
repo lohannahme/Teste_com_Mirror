@@ -7,6 +7,8 @@ using UnityEngine.InputSystem;
 
 public class CinemachinePOVExtension : CinemachineExtension
 {
+    [SerializeField] private Transform _playerTransform = null;
+
     private float _clampAngle = 80f;
     private float _speed = 7f;
 
@@ -14,8 +16,6 @@ public class CinemachinePOVExtension : CinemachineExtension
     private Vector2 _deltaInput;
 
     private Controls _controls;
-
-    [SerializeField] private Transform _playerTransform = null;
 
     private Controls Controls
     {
@@ -39,19 +39,11 @@ public class CinemachinePOVExtension : CinemachineExtension
         Controls.Player.Look.canceled += ctx => HandleLookInput(ctx);
     }
 
-    [ClientCallback]
-    private void OnDisable()
-    {
-        Controls.Enable();
-        Controls.Player.Look.performed -= ctx => HandleLookInput(ctx);
-        Controls.Player.Look.canceled -= ctx => HandleLookInput(ctx);
-    }
-
     protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase vcam, CinemachineCore.Stage stage, ref CameraState state, float deltaTime)
     {
         if (vcam.Follow)
         {
-            if(stage == CinemachineCore.Stage.Aim)
+            if (stage == CinemachineCore.Stage.Aim)
             {
                 if (_startingRotation == null) _startingRotation = transform.localRotation.eulerAngles;
 
@@ -64,6 +56,14 @@ public class CinemachinePOVExtension : CinemachineExtension
                 state.RawOrientation = Quaternion.Euler(-_startingRotation.y, _startingRotation.x, 0f);
             }
         }
+    }
+
+    [ClientCallback]
+    private void OnDisable()
+    {
+        Controls.Enable();
+        Controls.Player.Look.performed -= ctx => HandleLookInput(ctx);
+        Controls.Player.Look.canceled -= ctx => HandleLookInput(ctx);
     }
 
     private void HandleLookInput(InputAction.CallbackContext ctx)

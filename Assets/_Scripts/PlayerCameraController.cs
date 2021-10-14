@@ -10,14 +10,14 @@ public class PlayerCameraController : NetworkBehaviour
     [SerializeField] private CinemachineVirtualCamera _virtualCamera = null;
     [SerializeField] private CinemachinePOVExtension _povExtension;
 
-    private Controls controls;
+    private Controls _controls;
 
     private Controls Controls
     {
         get
         {
-            if (controls != null) { return controls; }
-            return controls = new Controls();
+            if (_controls != null) { return _controls; }
+            return _controls = new Controls();
         }
     }
 
@@ -27,7 +27,6 @@ public class PlayerCameraController : NetworkBehaviour
         _povExtension.enabled = true;
 
         enabled = true;
-
     }
 
     [ClientCallback]

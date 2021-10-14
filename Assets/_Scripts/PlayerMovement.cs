@@ -9,12 +9,13 @@ public class PlayerMovement : NetworkBehaviour
 {
     [SerializeField] private float _movementSpeed = 5f;
     [SerializeField] private CharacterController _controller = null;
-
-    private Vector3 _playerVelocity;//aa
+    
     private bool _groundedPlayer;
+
     private float _jumpHeight = 3f;
     private float _gravityValue = -9.81f;
-    private bool _teste;
+
+    private Vector3 _playerVelocity;
 
     private Vector2 _previousInput;
 
@@ -40,7 +41,6 @@ public class PlayerMovement : NetworkBehaviour
         Controls.Player.Jump.canceled -= ctx => DoJump();
     }
 
-
     [ClientCallback]
     private void OnEnable() => Controls.Enable();
 
@@ -53,7 +53,6 @@ public class PlayerMovement : NetworkBehaviour
         Move();
         
     }
-
 
     [Client]
     private void SetMovement(Vector2 movement) => _previousInput = movement;
@@ -81,12 +80,6 @@ public class PlayerMovement : NetworkBehaviour
             _playerVelocity.y = 0;
         }
 
-        /*if (_teste && _groundedPlayer)
-        {
-            _playerVelocity.y += Mathf.Sqrt(_jumpHeight * -3.0f * _gravityValue);
-            Debug.Log("funcionabitch");
-        }*/
-
         _playerVelocity.y += _gravityValue * Time.deltaTime;
         _controller.Move(_playerVelocity * Time.deltaTime);
     }
@@ -94,7 +87,6 @@ public class PlayerMovement : NetworkBehaviour
     [ClientCallback]
     private void DoJump()
     {
-
         _groundedPlayer = _controller.isGrounded;
         Debug.Log(_groundedPlayer);
 
@@ -104,7 +96,6 @@ public class PlayerMovement : NetworkBehaviour
             Debug.Log("funcionabitch");
         }
         
-
     }
 
 }
