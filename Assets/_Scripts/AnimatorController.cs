@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class AnimatorController : NetworkBehaviour
 {
     [SerializeField] private Animator _animator = null;
+    [SerializeField] private NetworkAnimator _networkAnimator = null;
 
     private Vector2 _moveValue;
 
@@ -44,6 +45,8 @@ public class AnimatorController : NetworkBehaviour
         Controls.Player.Move.performed -= ctx => ReadMoveValue(ctx);
         Controls.Player.Move.canceled -= ctx => ReadMoveValue(ctx);
 
+        Controls.Player.Jump.performed -= ctx => JumpAnimation();
+
     }
 
     [ClientCallback]
@@ -52,7 +55,7 @@ public class AnimatorController : NetworkBehaviour
     [ClientCallback]
     private void JumpAnimation()
     {
-        _animator.SetTrigger("Jump");
+        _networkAnimator.SetTrigger("Jump");
     }
 
 
@@ -75,5 +78,5 @@ public class AnimatorController : NetworkBehaviour
         _moveValue = ctx.ReadValue<Vector2>();
     }
 
-
+    
 }
